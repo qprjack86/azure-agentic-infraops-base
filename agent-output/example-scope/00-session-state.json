@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "scope": "example-scope",
+  "audit_type": "paas",
+  "current_lane": "governance",
+  "updated": "2026-03-14T12:30:00Z",
+  "artifacts": [
+    "audit-reports/example-scope-paas-audit.md"
+  ],
+  "lanes": {
+    "triage": {
+      "status": "complete"
+    },
+    "iaas": {
+      "status": "pending"
+    },
+    "paas": {
+      "status": "complete"
+    },
+    "governance": {
+      "status": "in_progress"
+    },
+    "commercial": {
+      "status": "pending"
+    },
+    "context": {
+      "status": "pending"
+    }
+  },
+  "handoff": {
+    "next_agent": "04-Governance Auditor",
+    "next_lane": "governance",
+    "notes": "Continue after PaaS findings to validate policy and RBAC guardrails."
+  }
+}

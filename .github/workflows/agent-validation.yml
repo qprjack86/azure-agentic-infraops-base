@@ -1,0 +1,47 @@
+name: Validate Agent Workspace
+
+"on":
+  pull_request:
+    paths:
+      - ".github/agents/**"
+      - ".github/skills/**"
+      - ".github/instructions/**"
+      - ".github/agent-registry.json"
+      - ".github/skill-affinity.json"
+      - "agent-output/**/00-session-state.json"
+      - "scripts/**"
+      - "package.json"
+      - "package-lock.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/agents/**"
+      - ".github/skills/**"
+      - ".github/instructions/**"
+      - ".github/agent-registry.json"
+      - ".github/skill-affinity.json"
+      - "agent-output/**/00-session-state.json"
+      - "scripts/**"
+      - "package.json"
+      - "package-lock.json"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run auditor validations
+        run: npm run validate:all

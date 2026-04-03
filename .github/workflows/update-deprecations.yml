@@ -1,0 +1,42 @@
+name: Update Azure Deprecations Database
+
+on:
+  schedule:
+    - cron: '0 0 * * 1' # Runs every Monday at midnight
+  workflow_dispatch:    # Allows you to trigger it manually
+
+# Add this block to grant push access
+permissions:
+  contents: write
+
+jobs:
+  update-database:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Fetch Latest Deprecations
+        run: |
+          mkdir -p .github/data
+          node scripts/fetch-azure-deprecations.mjs
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          touch .github/data/azure-deprecations.json
+          
+          git add .github/data/azure-deprecations.json
+          git diff --quiet && git diff --staged --quiet || git commit -m "chore: update azure deprecations database"
+          git push
